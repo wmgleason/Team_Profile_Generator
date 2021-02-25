@@ -1,4 +1,6 @@
 
+// https://nodejs.dev/learn/the-package-json-guide
+
 {
   "name": "Team-Profile-Generator",
   "version": "1.0.0",
@@ -17,9 +19,9 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ajcuddeback/team-profile-generator/issues"
+    "url": "https://github.com/wmgleason/Team-Profile-Generator/issues"
   },
-  "homepage": "https://github.com/ajcuddeback/team-profile-generator#readme",
+  "homepage": "https://github.com/wmgleason/Team-Profile-Generator#readme",
   "dependencies": {
     "inquirer": "^7.3.3"
   },
