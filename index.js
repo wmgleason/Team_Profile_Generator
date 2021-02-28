@@ -1,21 +1,25 @@
 var fs = require('fs');
-
-fs.writeFile('renderedTeamProfile.html', 'Hello content!', function (err) {
-  if (err) throw err;
-  console.log('Saved!');
-});
-
-const MaxLengthInputPrompt = require('inquirer-maxlength-input-prompt')
+const Engineer = require("./lib/Engineer.js");
+const Intern = require("./lib/Intern.js");
+const Manager = require("./lib/Manager.js");
+var ID = 0;
+var teamArray = [];
+const jest = require("jest");
 //index.js
 let inquirer = require('inquirer');
 // let fs = require('fs');
 const util = require('util');
 const generateHTML = require('./src/generateHTML');
 // const promisify = require('util.promisify');
-// const writeFileAsync = util.promisify(fs.writeFile);
 
 // TODO: Create an array of questions for user input
-const writeFileAsync = util.promisify(fs.writeFile);
+// const writeFileAsync = util.promisify(fs.writeFile);
+
+// fs.writeFile('renderedTeamProfile.html', 'Hello content!', function (err) {
+//   if (err) throw err;
+//   console.log('Saved!');
+// });
+
 
 // WHEN I start the application
 // THEN I am prompted to enter the team manager’s name, employee ID, email address, and office number
@@ -28,8 +32,8 @@ const writeFileAsync = util.promisify(fs.writeFile);
 // WHEN I decide to finish building my team
 // THEN I exit the application, and the HTML is generated
 
-function promptUser()  {
-    return inquirer.prompt(answers)[
+function promptUser(answers)  {
+    return inquirer.prompt([
         {
             type: "input",
             message: "Enter the team manager's name, please:",
@@ -48,7 +52,7 @@ function promptUser()  {
         {
             type: "number",
             message: "Enter manager's office number:",
-            name: "OfficeNumber"
+            name: "officeNumber"
         },
         {
             type: "list",
@@ -58,41 +62,40 @@ function promptUser()  {
                 "Engineer",
 		        "Intern"
             ]
-        }
-    ]};
-    then(answers => {
-        console.info('Answer:', answers.Role);
-        if (answers.Role ==  "Engineer") {
-        inquirer
-          .prompt ([
-        {
-            type: "input",
-            message: "Enter engineer's employee ID:",
-            name: "ID"
         },
-
+    ]).then(function (res) {
+        console.log(res)
+        if (res.Role ===  "Engineer") {
+        inquirer.prompt ([
+            {
+                type: "input",
+                message: "Enter the engineer's name, please:",
+                name: "Name"
+            },
+            {
+                type: "input",
+                message: "Enter the engineer's employee ID:",
+                name: "ID"
+            },
+            {
+                type: "input",
+                message: "Enter the engineer's email address:",
+                name: "Email"
+            },
         {
             type: "input",
-            message: "Enter contribution guidelines for your project:",
-            name: "Contributing"
-        },
-        {
-            type: "input",
-            message: "Enter test information for your project:",
-            name: "Tests"
-        },
-        {
-            type: "input",
-            message: "Enter your GitHub Username:",
+            message: "Enter the engineer's GitHub Username:",
             name: "GitHub"
-        },
-        {
-            type: "input",
-            message: "Enter your email address:",
-            name: "Email"
-        },
-        ]);
         }
+    ]).then(function (engineerRes) {
+        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, Id, engineerRes.github);
+        ID = ID + 1; // could be "Id++"
+        console.log(newEngineer);
+        // run promptUser (called recursion) so that you can add multiple Engineers and id changes incrementally
+        teamArray.push(newEngineer);
+        addUser();
+        
+    });
     }
 
 
@@ -106,8 +109,9 @@ function promptUser()  {
                 console.log("✔️  Success! Your Team Rota HTML file has been generated.");
             } catch (err) {
                 console.log(err);
-            }
-        }
+            };
+        };
+});
 }
   // function call to initialize program
-init();
+// init();
