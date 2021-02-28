@@ -1,8 +1,16 @@
+var fs = require('fs');
+
+fs.writeFile('renderedTeamProfile.html', 'Hello content!', function (err) {
+  if (err) throw err;
+  console.log('Saved!');
+});
+
+const MaxLengthInputPrompt = require('inquirer-maxlength-input-prompt')
 //index.js
 let inquirer = require('inquirer');
-let fs = require('fs');
+// let fs = require('fs');
 const util = require('util');
-const generate = require('./src/generateHTML')
+const generateHTML = require('./src/generateHTML');
 // const promisify = require('util.promisify');
 // const writeFileAsync = util.promisify(fs.writeFile);
 
@@ -21,7 +29,7 @@ const writeFileAsync = util.promisify(fs.writeFile);
 // THEN I exit the application, and the HTML is generated
 
 function promptUser()  {
-    return inquirer.prompt([
+    return inquirer.prompt(answers)[
         {
             type: "input",
             message: "Enter the team manager's name, please:",
@@ -29,24 +37,40 @@ function promptUser()  {
         },
         {
             type: "input",
-            message: "Enter the employee's ID:",
+            message: "Enter the manager's employee's ID:",
             name: "ID"
         },
         {
             type: "input",
-            message: "Enter the employee's email address:",
+            message: "Enter the manager's email address:",
             name: "Email"
         },
         {
-            type: "input",
-            message: "Enter employee's GitHub user name:",
-            name: "GitHub User Name"
+            type: "number",
+            message: "Enter manager's office number:",
+            name: "OfficeNumber"
         },
         {
+            type: "list",
+            message: "Please add additional employees to complete your team; what is the role of the next new employee?",
+            name: "Role",
+            choices: [
+                "Engineer",
+		        "Intern"
+            ]
+        }
+    ]};
+    then(answers => {
+        console.info('Answer:', answers.Role);
+        if (answers.Role ==  "Engineer") {
+        inquirer
+          .prompt ([
+        {
             type: "input",
-            message: "Enter any notable features of your project:",
-            name: "Features"
+            message: "Enter engineer's employee ID:",
+            name: "ID"
         },
+
         {
             type: "input",
             message: "Enter contribution guidelines for your project:",
@@ -67,36 +91,23 @@ function promptUser()  {
             message: "Enter your email address:",
             name: "Email"
         },
-        {
-            type: "list",
-            message: "Which license does this project fall under?",
-            name: "License",
-            choices: [
-                "MIT License",
-		        "GNU GPL v 3",
-                "Code Project Open License (CPOL)",
-                "Common Development and Distribution License (CDDL)",
-                "Microsoft Public License (Ms-PL)",
-                "Mozilla Public License 1.1 (MPL 1.1)",
-                "Common Public License Version 1.0 (CPL)",
-                "Eclipse Public License 1.0",
-                "Apache License, Version 2.0"
-            ]
-        },
-    ]);
-};
-async function init() {
-    try {
-        // Ask the user questions and use the responses they entered
-        const answers = await promptUser();
-        const generateContent = generateHTML(answers);
-        // Write new README.md which overwrites old in this directory
-        await writeFileAsync('./README.md', generateContent);
-        console.log("✔️  Success! Your Team Rota HTML file has been generated.");
-    }   catch(err) {
-        console.log(err);
+        ]);
+        }
     }
-  }
 
+
+        async () => {
+            try {
+                // Ask the user questions and use the responses they entered
+                const answers = await promptUser();
+                const generateContent = generateHTML(answers);
+                // Write new README.md which overwrites old in this directory
+                await writeFileAsync('./dist/teamROTA.html', generateContent);
+                console.log("✔️  Success! Your Team Rota HTML file has been generated.");
+            } catch (err) {
+                console.log(err);
+            }
+        }
+}
   // function call to initialize program
 init();
