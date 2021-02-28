@@ -1,8 +1,5 @@
-
-// https://nodejs.dev/learn/the-package-json-guide
-
 {
-  "name": "Team-Profile-Generator",
+  "name": "Team_Profile_Generator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wmgleason/Team-Profile-Generator.git"
+    "url": "git+https://github.com/wmgleason/Team_Profile_Generator.git"
   },
   "author": "",
   "license": "MIT",
