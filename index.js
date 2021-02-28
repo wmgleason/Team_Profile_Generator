@@ -1,15 +1,18 @@
+
+let inquirer = require('inquirer');
 var fs = require('fs');
+const jest = require("jest");
+const Manager = require("./lib/Manager.js");
 const Engineer = require("./lib/Engineer.js");
 const Intern = require("./lib/Intern.js");
-const Manager = require("./lib/Manager.js");
 var ID = 0;
 var teamArray = [];
-const jest = require("jest");
+
 //index.js
-let inquirer = require('inquirer');
+
 // let fs = require('fs');
 const util = require('util');
-const generateHTML = require('./src/generateHTML');
+// const generateHTML = require('./src/generateHTML');
 // const promisify = require('util.promisify');
 
 // TODO: Create an array of questions for user input
@@ -32,38 +35,43 @@ const generateHTML = require('./src/generateHTML');
 // WHEN I decide to finish building my team
 // THEN I exit the application, and the HTML is generated
 
-function promptUser(answers)  {
+function promptUser (answers)  {
     return inquirer.prompt([
         {
             type: "list",
             name: "role",
-            message: "what is your role?",
+            message: "what is the employee's role? Please select one using the up or down arrow keys and hit enter.",
             choices: ["Engineer", "Intern", "Manager"]
         },
     ]).then(function (res) {
-        // should use switch case instead of if/else starting here
         console.log(res)
-        if (res.role === "Engineer") {
+        if (res.role === "Manager") {
             inquirer.prompt([
                 {
                     name: "name",
-                    message: "What is your name?",
+                    message: "What is the employee's name?",
                     type: "input"
-                },
-                {
-                    name: "github",
-                    type: "input",
-                    message: "What is your github Username?"
                 },
                 {
                     name: "email",
                     type: "input",
-                    message: "What is your email?"
+                    message: "What is the employee's email?"
+                },
+                {
+                    name: "officeNumber",
+                    type: "input",
+                    message: "What is the manager's office number?"
                 }
-    ]).then(function (res) {
-        console.log(res);
-        if (res.Role ===  "Engineer") {
-        inquirer.prompt ([
+            ]).then(function (managerRes) {
+                var newManager = new Manager(managerRes.name, managerRes.email, ID, managerRes.officeNumber);
+                ID = ID + 1; // could be "ID++"
+                console.log(newManager);
+                teamArray.push(newManager);
+                addUser();
+                
+            });
+        } else if (res.role === "Engineer") {
+            inquirer.prompt([
             {
                 type: "input",
                 message: "Enter the engineer's name, please:",
@@ -86,29 +94,42 @@ function promptUser(answers)  {
         }
     ]).then(function (engineerRes) {
         var newEngineer = new Engineer(engineerRes.name, engineerRes.email, ID, engineerRes.github);
-        ID = ID + 1; // could be "Id++"
+        ID = ID + 1; // could be "ID++"
         console.log(newEngineer);
         // run promptUser (called recursion) so that you can add multiple Engineers and id changes incrementally
         teamArray.push(newEngineer);
         addUser();
         
     });
-    }
+} else if (res.role === "Intern") {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What is the intern's name?",
+            type: "input"
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is the intern's email address?"
+        },
+        {
+            name: "school",
+            type: "input",
+            message: "Where did the intern attend college/university?"
+        }
+    ]).then(function (internRes) {
+        var newIntern = new Intern(internRes.name, internRes.email, ID, internRes.school);
+        ID = ID + 1; // could be "ID++"
+        console.log(newIntern)
+        teamArray.push(newIntern);
+        addUser();
+    });
+    };
+})
+    .catch(function (err) {
+        console.log(err);
+    });
 
-
-        async () => {
-            try {
-                // Ask the user questions and use the responses they entered
-                const answers = await promptUser();
-                const generateContent = generateHTML(answers);
-                // Write new README.md which overwrites old in this directory
-                await writeFileAsync('./dist/teamROTA.html', generateContent);
-                console.log("✔️  Success! Your Team Rota HTML file has been generated.");
-            } catch (err) {
-                console.log(err);
-            }
-        };
-});
-}
-  // function call to initialize program
-// init();
+};
+promptUser();
