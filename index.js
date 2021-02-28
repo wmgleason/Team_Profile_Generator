@@ -35,36 +35,33 @@ const generateHTML = require('./src/generateHTML');
 function promptUser(answers)  {
     return inquirer.prompt([
         {
-            type: "input",
-            message: "Enter the team manager's name, please:",
-            name: "Name"
-        },
-        {
-            type: "input",
-            message: "Enter the manager's employee's ID:",
-            name: "ID"
-        },
-        {
-            type: "input",
-            message: "Enter the manager's email address:",
-            name: "Email"
-        },
-        {
-            type: "number",
-            message: "Enter manager's office number:",
-            name: "officeNumber"
-        },
-        {
             type: "list",
-            message: "Please add additional employees to complete your team; what is the role of the next new employee?",
-            name: "Role",
-            choices: [
-                "Engineer",
-		        "Intern"
-            ]
+            name: "role",
+            message: "what is your role?",
+            choices: ["Engineer", "Intern", "Manager"]
         },
     ]).then(function (res) {
+        // should use switch case instead of if/else starting here
         console.log(res)
+        if (res.role === "Engineer") {
+            inquirer.prompt([
+                {
+                    name: "name",
+                    message: "What is your name?",
+                    type: "input"
+                },
+                {
+                    name: "github",
+                    type: "input",
+                    message: "What is your github Username?"
+                },
+                {
+                    name: "email",
+                    type: "input",
+                    message: "What is your email?"
+                }
+    ]).then(function (res) {
+        console.log(res);
         if (res.Role ===  "Engineer") {
         inquirer.prompt ([
             {
@@ -88,7 +85,7 @@ function promptUser(answers)  {
             name: "GitHub"
         }
     ]).then(function (engineerRes) {
-        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, Id, engineerRes.github);
+        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, ID, engineerRes.github);
         ID = ID + 1; // could be "Id++"
         console.log(newEngineer);
         // run promptUser (called recursion) so that you can add multiple Engineers and id changes incrementally
@@ -109,7 +106,7 @@ function promptUser(answers)  {
                 console.log("✔️  Success! Your Team Rota HTML file has been generated.");
             } catch (err) {
                 console.log(err);
-            };
+            }
         };
 });
 }
