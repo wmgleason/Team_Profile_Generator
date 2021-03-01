@@ -10,7 +10,9 @@
   ## Usage:
   This app is meant for casual use and an exercise in using JS, inquirer, node, html and CSS.
   ## Features:
-  
+  ## Visuals
+  This gif shows the Team Profile Generator in use at the command line in Terminal.
+  ![GIF of the app in use](TeamProfileGeneratorCLI.gif)
   ## Contributing:
   If you would like to contribute, please fork off a new branch and submit a new Pull Request.
   ## Tests:
