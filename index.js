@@ -27,67 +27,65 @@ function promptUser ()  {
             choices: ["Engineer", "Intern", "Manager"]
         }
         ])
-            .then(function (res) {
-            // console.log(res);
-                if (res.role === "Manager") 
-                addManager();
-            })
+            .then(addManager);
+            
 }
-    function addManager() {
-        inquirer.prompt([
-            {
-                type: "input",
-                name: "Name",
-                message: "What is the manager's name?",
-            },
-            {
-                type: "input",
-                name: "ID",
-                message: "Enter the manager's employee ID?"
-            },
-            {
-                type: "input",
-                name: "email",
-                message: "What is the manager's email address?"
-            },
-            {
-                type: "input",
-                name: "officeNumber",
-                message: "What is the manager's office number?"
-            },
-        ])
-            .then(function (managerRes) {
-                var newManager = new Manager(managerRes.name, managerRes.email, ID, managerRes.officeNumber);
-                console.log(newManager);
-                teamProfileArray.push(newManager);
-                addEmployee();
-            });
-            function addEmployee() {
-                inquirer.prompt([
-                    {
-                        type: "list",
-                        message: "Would you like to add an additional team member?",
-                        choices: ["Yes, add an engineer", "Yes, add an intern", "No, my team is complete"],
-                        name: "addEmployeeRole"
-                    }
-                ])
+function addManager() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "Name",
+            message: "What is the manager's name?",
+        },
+        {
+            type: "input",
+            name: "ID",
+            message: "Enter the manager's employee ID?"
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "What is the manager's email address?"
+        },
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "What is the manager's office number?"
+        },
+    ])
+    .then(function (managerRes) {
+        var newManager = new Manager(managerRes.name, managerRes.email, ID, managerRes.officeNumber);
+        console.log(newManager);
+        teamProfileArray.push(newManager);
+        addEmployee();
+        });
+
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Would you like to add an additional team member?",
+            choices: ["Yes, add an engineer", "Yes, add an intern", "No, my team is complete"],
+            name: "addEmployeeRole"
+        }
+    ])
             
-                    .then(function (res) {
+        .then(function (res) {
             
-                        switch (res.addEmployeeRole) {
-                            case "Yes, please add an engineer.":
-                                addEngineer();
-                                break;
+            switch (res.addEmployeeRole) {
+                case "Yes, please add an engineer.":
+                    addEngineer();
+                    break;
             
-                            case "Yes, please add an intern.":
-                                addIntern();
-                                break;
-                            case "No, my team is perfect.":
-                                compileTeam();
-                                break;
-                        }
-                    });
+                case "Yes, please add an intern.":
+                    addIntern();
+                    break;
+                case "No, my team is perfect.":
+                    compileTeam();
+                    break;
             }
+        });
+}
 
 function addEngineer() {
     inquirer.prompt([
@@ -169,10 +167,50 @@ function addEmployee(){
                     addIntern();
                     break;
                 case "No, my team is complete":
-                    compileTeam();
+                    completeTeam();
                     break;
             }
         })
 }
+function completeTeam() {
+    console.log("Success! Your team rota has now been generated as an html file.")
 
+    const htmlArray = []
+    const htmlBeginning = `
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>${finalTeamArray[0]}</title>
+    <link href="https://fonts.googleapis.com/css?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+     ${style}
+    </style>
+</head>
+<body>
+    <div class="banner-bar">
+        <h1>${teamProfileArray[0]}</h1>
+    </div>
+    <div class="card-container">
+    `
+    htmlArray.push(htmlBeginning);
+
+    for (let i = 1; i < teamProfileArray.length; i++) {
+        let object = `
+        <div class="member-card">
+            <div class="card-top">
+                <h2>${teamProfileArray[i].name}</h2>
+                <h2>${teamProfileArray[i].title}</h2>
+            </div>
+            <div class="card-bottom">
+                <p>Employee ID: ${teamProfileArray[i].id}</p>
+                <p>Email: <a href="mailto:${teamProfileArray[i].email}">${teamProfileArray[i].email}</a>></p>
+        `
+    fs.writeFile(`.dist/renderedTeamProfile/${teamProfileArray[0]}.html`, htmlArray.join(""), function (err) {
+        
+    })
+}
+}
 promptUser()
