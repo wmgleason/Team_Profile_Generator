@@ -88,77 +88,91 @@ function promptUser ()  {
                         }
                     });
             }
-            if (res.role === "Engineer") {
-                inquirer.prompt([
-                    {
-                        type: "input",
-                        name: "Name",
-                        message: "Enter the engineer's name, please:"
-                    },
-                    {
-                       type: "input",
-                        name: "ID",
-                        message: "Enter the engineer's employee ID:"
-                    },
-                    {
-                        type: "input",
-                        name: "Email",
-                        message: "Enter the engineer's email address:"
-                    },
-                    {
-                       type: "input",
-                        name: "GitHub",
-                       message: "Enter the engineer's GitHub Username:"
-                    }
-                ]).then(function (engineerRes) {
-                    var newEngineer = new Engineer(engineerRes.name, engineerRes.email, ID, engineerRes.github);
-                    ID = ID;
-                    console.log(newEngineer);
-                    teamProfileArray.push(newEngineer);
-                    addEmployee();  
-                });
-            }
+
+function addEngineer() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "Name",
+            message: "Enter the engineer's name, please:"
+        },
+        {
+            type: "input",
+            name: "ID",
+            message: "Enter the engineer's employee ID:"
+        },
+        {
+            type: "input",
+            name: "Email",
+            message: "Enter the engineer's email address:"
+        },
+        {
+            type: "input",
+            name: "GitHub",
+            message: "Enter the engineer's GitHub Username:"
+        }
+    ]).then(function (engineerRes) {
+        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, ID, engineerRes.github);
+        ID = ID;
+        console.log(newEngineer);
+        teamProfileArray.push(newEngineer);
+        addEmployee();  
+    });
+}
     
-            else (res.role === "Intern") {
-                inquirer.prompt([
-                    {
-                        name: "name",
-                        message: "What is the intern's name?",
-                        type: "input"
-                    },
-                    {
-                        name: "email",
-                        type: "input",
-                        message: "What is the intern's email address?"
-                    },
-                    {
-                        name: "school",
-                        type: "input",
-                        message: "Where did the intern attend college/university?"
-                    }   
-                ]).then(function (internRes) {
-                    var newIntern = new Intern(internRes.name, internRes.email, ID, internRes.school);
-                    ID = ID;
-                    console.log(newIntern);
-                    teamProfileArray.push(newIntern);
-                    addEmployee();
-                });
-            }
+function addIntern(){
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What is the intern's name?",
+            type: "input"
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is the intern's email address?"
+        },
+        {
+            name: "school",
+            type: "input",
+            message: "Where did the intern attend college/university?"
+        }   
+    ]).then(function (internRes) {
+        var newIntern = new Intern(internRes.name, internRes.email, ID, internRes.school);
+        ID = ID;
+        console.log(newIntern);
+        teamProfileArray.push(newIntern);
+        addEmployee();
+    });
+}
         // .catch(function (err) {
         // console.log(err);
         // });
 
-        function addEmployee(){
-        inquirer.prompt([
-            {   
-                name: "continue",
-                message: "Do you want to add another employee to your team?",
-                type: "confirm"
-            }
-        ]).then(function(confirmRes){
-            confirmRes.continue ? promptUser() : teamProfileArray();
-        });
+function addEmployee(){
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Would you like to add more team members?",
+            choices: ["Yes, add an engineer", "Yes, add an intern", "No, my team is complete"],
+            name: "addMemberRes"
         }
-    },
+    ])
+        .then(function (res) {
+    
+            switch (res.addMemberRes) {
+                case "Yes, add an engineer":
+                    addEngineer();
+                    break;
+    
+                case "Yes, add an intern":
+                    addIntern();
+                    break;
+                case "No, my team is complete":
+                    compileTeam();
+                    break;
+            }
+        })
 }
-// promptUser();
+
+promptUser()
