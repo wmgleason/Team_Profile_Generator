@@ -13,6 +13,7 @@
   ## Visuals
   This gif shows the Team Profile Generator in use at the command line in Terminal.
   ![GIF of the app in use](TeamProfileGeneratorCLI.gif)
+  ![Rendered html file example](team_profile_html.png)
   ## Contributing:
   If you would like to contribute, please fork off a new branch and submit a new Pull Request.
   ## Tests:
