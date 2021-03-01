@@ -4,9 +4,10 @@ const jest = require("jest");
 const Manager = require("./lib/Manager.js");
 const Engineer = require("./lib/Engineer.js");
 const Intern = require("./lib/Intern.js");
+const Employee = require("./lib/Employee.js")
 const style = require("./dist/styles.css")
-var teamProfileArray = [];
-const ID = 0
+let teamProfileArray = [];
+const id = 0
 
 const util = require("util");
 // const teamProfile = require('./src/teamProfile.html');
@@ -41,8 +42,8 @@ function addManager() {
         },
         {
             type: "input",
-            name: "ID",
-            message: "Enter the manager's employee ID?"
+            name: "id",
+            message: "Enter the manager's employee id?"
         },
         {
             type: "input",
@@ -56,7 +57,7 @@ function addManager() {
         },
     ])
     .then(function (managerRes) {
-        var newManager = new Manager(managerRes.name, managerRes.email, managerRes.officeNumber, managerRes.ID);
+        var newManager = new Manager(managerRes.name, managerRes.email, managerRes.officeNumber, managerRes.id);
         console.log(newManager);
         teamProfileArray.push(newManager);
         addEmployee();
@@ -83,7 +84,7 @@ function addEmployee() {
                     addIntern();
                     break;
                 case "No, my team is perfect.":
-                    compileTeam();
+                    completeTeam();
                     break;
             }
         });
@@ -98,8 +99,8 @@ function addEngineer() {
         },
         {
             type: "input",
-            name: "ID",
-            message: "Enter the engineer's employee ID:"
+            name: "id",
+            message: "Enter the engineer's employee id:"
         },
         {
             type: "input",
@@ -112,7 +113,7 @@ function addEngineer() {
             message: "Enter the engineer's GitHub Username:"
         }
     ]).then(function (engineerRes) {
-        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, engineerRes.ID, engineerRes.gitHub);
+        var newEngineer = new Engineer(engineerRes.name, engineerRes.email, engineerRes.id, engineerRes.gitHub);
         console.log(newEngineer);
         teamProfileArray.push(newEngineer);
         addEmployee();  
@@ -133,8 +134,8 @@ function addIntern(){
         },
         {
             type: "input",
-            name: "ID",
-            message: "Enter the intern's employee ID?"
+            name: "id",
+            message: "Enter the intern's employee id?"
         },
         {
             name: "school",
@@ -142,9 +143,10 @@ function addIntern(){
             message: "Where did the intern attend college/university?"
         }   
     ]).then(function (internRes) {
-        var newIntern = new Intern(internRes.name, internRes.email, internRes.ID, internRes.school);
+        var newIntern = new Intern(internRes.name, internRes.email, internRes.id, internRes.school);
         console.log(newIntern);
         teamProfileArray.push(newIntern);
+        console.log(teamProfileArray);
         addEmployee();
     });
 }
@@ -178,7 +180,7 @@ function addEmployee(){
         })
 }
 function completeTeam() {
-    console.log("Success! Your team rota has now been generated as an html file.")
+    console.log("  Success! Your team rota has now been generated as an html file.  ")
 
     const htmlArray = []
     const htmlBeginning = `
@@ -188,7 +190,7 @@ function completeTeam() {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>${teamProfileArray[0]}</title>
+    <title>Your Team Profile</title>
     <link href="https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
      ${style}
@@ -202,7 +204,7 @@ function completeTeam() {
     `
     htmlArray.push(htmlBeginning);
 
-    for (let i = 1; i < teamProfileArray.length; i++) {
+    for (let i = 0; i < teamProfileArray.length; i++) {
         let object = `
         <div class="member-card">
             <div class="card-top">
@@ -210,7 +212,7 @@ function completeTeam() {
                 <h2>${teamProfileArray[i].title}</h2>
             </div>
             <div class="card-bottom">
-                <p>Employee ID: ${teamProfileArray[i].id}</p>
+                <p>Employee id: ${teamProfileArray[i].id}</p>
                 <p>Email: <a href="mailto:${teamProfileArray[i].email}">${teamProfileArray[i].email}</a>></p>
         `
         if (teamProfileArray[i].officeNumber) {
@@ -242,9 +244,10 @@ function completeTeam() {
     `
     htmlArray.push(htmlEnd);
 
-    fs.writeFile(`.dist/renderedTeamProfile/${teamProfileArray[0]}.html`, htmlArray.join(""), function (err) {
+    fs.writeFile(`./dist/renderedTeamProfile.html`, htmlArray.join(""), function (err) {
         
     })
 }
+
 }
 promptUser()
