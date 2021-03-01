@@ -19,3 +19,9 @@ test("Can get employee email via getEmail()", () => {
     expect(Employee.getEmail()).toBe(Email);
   });
 
+  test("Can get employee github name via getgitHub()", () => {
+    const gitHub = "barbgithub";
+    const Employee = new Employee("Barb Holly", "33", gitHub);
+    expect(Employee.getgitHub()).toBe(gitHub);
+  });
+

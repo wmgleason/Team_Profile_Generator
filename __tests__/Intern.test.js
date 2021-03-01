@@ -15,8 +15,13 @@ test("Can get employee name with getName()", () => {
   
   test("Can get employee email via getEmail()", () => {
       const Email = "blackjack@mailsss.com";
-      const Employee = new Employee("Jack Black", 333, Email);
+      const Employee = new Employee("Jack Black", "333", Email);
       expect(Employee.getEmail()).toBe(Email);
     });
   
+    test("Can get employee school via getschool()", () => {
+        const school = "Yale";
+        const Employee = new Employee("Jack Black", "333", school);
+        expect(Employee.getSchool()).toBe(school);
+      });
   
